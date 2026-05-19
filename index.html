@@ -10,12 +10,17 @@
         h2 { color: #1e4620; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; margin-top: 0; }
         .model-box { background: #f9fbf9; border-left: 5px solid #2e7d32; padding: 15px; margin: 20px 0; border-radius: 4px; }
         .formula { font-size: 1.2rem; font-weight: bold; font-family: monospace; color: #2c3e50; margin: 10px 0; }
-        .chart-box { margin-top: 30px; background: #fff; border: 1px solid #ddd; padding: 20px; border-radius: 8px; }
-        .graph-area { display: flex; align-items: flex-end; height: 200px; border-left: 2px solid #333; border-bottom: 2px solid #333; padding-top: 20px; }
-        .bar { flex: 1; margin: 0 2px; background: #2e7d32; transition: background 0.2s; cursor: pointer; }
+        
+        /* KOTAK GRAF DIBAIKI */
+        .chart-box { margin-top: 30px; background: #ffffff; border: 2px solid #2e7d32; padding: 30px 20px; border-radius: 8px; }
+        .graph-area { display: flex; align-items: flex-end; justify-content: space-between; height: 250px; border-left: 3px solid #333; border-bottom: 3px solid #333; padding: 10px; background: #fafafa; }
+        
+        /* TIANG GRAF DIUBAH BAGI TEBAL & JELAS */
+        .bar { width: 14px; min-height: 10px; background: #2e7d32; border: 1px solid #1b5e20; transition: background 0.2s; cursor: pointer; border-radius: 3px 3px 0 0; }
         .bar:hover { background: #81c784; }
-        .x-ticks { display: flex; justify-content: space-between; color: #666; font-size: 0.8rem; margin-top: 5px; }
-        .result-box { margin-top: 20px; background: #e8f5e9; border: 1px solid #c8e6c9; padding: 15px; border-radius: 8px; font-weight: bold; text-align: center; color: #2e7d32; font-size: 1.1rem; }
+        
+        .x-ticks { display: flex; justify-content: space-between; color: #666; font-size: 0.9rem; font-weight: bold; margin-top: 10px; padding-left: 10px; }
+        .result-box { margin-top: 25px; background: #e8f5e9; border: 2px solid #c8e6c9; padding: 20px; border-radius: 8px; font-weight: bold; text-align: center; color: #2e7d32; font-size: 1.2rem; min-height: 50px; }
     </style>
 </head>
 <body>
@@ -43,14 +48,22 @@
     <script>
         const graphArea = document.getElementById('graphArea');
         const resultDiv = document.getElementById('result');
-        for(let x = 0; x <= 42; x++) {
-            let weight = (-0.04 * Math.pow(x, 3)) + (2.8 * Math.pow(x, 2)) + (5 * x) + 45;
-            let rate = (-0.12 * Math.pow(x, 2)) + (5.6 * x) + 5;
+        
+        // Buat 42 tiang, selang beberapa hari supaya muat skrin laptop
+        for(let x = 0; x <= 42; x += 1.5) {
+            let day = Math.round(x);
+            let weight = (-0.04 * Math.pow(day, 3)) + (2.8 * Math.pow(day, 2)) + (5 * day) + 45;
+            let rate = (-0.12 * Math.pow(day, 2)) + (5.6 * day) + 5;
+            
             const bar = document.createElement('div');
             bar.className = 'bar';
-            bar.style.height = Math.max(5, (weight / 3500) * 100) + '%';
+            
+            // Kira tinggi tiang supaya wajib nampak
+            let heightPercent = (weight / 3500) * 100;
+            bar.style.height = Math.max(8, heightPercent) + '%';
+            
             bar.onmouseover = () => {
-                resultDiv.innerHTML = 📍 DAY ${x} | Weight: ${weight.toFixed(1)}g <br> Growth Rate, f'(${x}) = ${rate.toFixed(2)} g/day;
+                resultDiv.innerHTML = 📍 DAY ${day} | Weight: ${weight.toFixed(1)}g <br> Growth Rate, f'(${day}) = ${rate.toFixed(2)} g/day;
             };
             graphArea.appendChild(bar);
         }
