@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 25%: SFH Program</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: sans-serif; background: #f8f9fa; padding: 20px; color: #333; }
+        .box { max-width: 800px; margin: 0 auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-top: 5px solid #27ae60; }
+        .formula { background: #f4f6f7; padding: 15px; border-left: 4px solid #e67e22; font-family: monospace; font-size: 1.1rem; margin: 15px 0; }
+        .chart-container { position: relative; height: 350px; margin: 20px 0; }
+        #info { background: #e8f8f5; padding: 15px; border-radius: 8px; border: 1px solid #a3e4d7; margin-top: 15px; }
+    </style>
+</head>
+<body>
+<div class="box">
+    <h2>Application of Derivatives in Bioscience (SFH)</h2>
+    <p><strong>Scenario:</strong> Broiler Chicken Growth Rate (Malaysian Smart-Poultry Farm)</p>
+    <p>In Malaysia, heat stress affects how chickens grow. This graph tracks the 42-day cycle to optimize feed and harvest timing.</p>
+    
+    <h3>Mathematical Model</h3>
+    <p>Growth Function: <div class="formula">f(x) = -0.04x³ + 2.8x² + 5x + 45</div></p>
+    <p>Derivative (Growth Rate per day): <div class="formula">f'(x) = -0.12x² + 5.6x + 5</div></p>
+
+    <p style="color: blue;">💡 <strong>Interactive:</strong> Click any point on the graph below to calculate the derivative!</p>
+    <div class="chart-container"><canvas id="myChart"></canvas></div>
+    <div id="info"><h3>📊 Output Calculator</h3><p id="txt">Click on the graph to start calculating $f'(x)$.</p></div>
+</div>
+<script>
+    const days = [0, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42];
+    const weights = days.map(x => Math.round(-0.04*x*x*x + 2.8*x*x + 5*x + 45));
+    const ctx = document.getElementById('myChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: days.map(d => `Day ${d}`),
+            datasets: [{ label: 'Chicken Weight (grams)', data: weights, borderColor: '#27ae60', borderWidth: 3, fill: false }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            onClick: (e, el) => {
+                if(el.length > 0) {
+                    const i = el[0].index; const x = days[i]; const w = weights[i];
+                    const rate = parseFloat((-0.12*x*x + 5.6*x + 5).toFixed(2));
+                    let exp = x <= 12 ? "Slow brooder stage." : x <= 27 ? "Peak muscle growth!" : "Growth slows down due to humidity. Ready to harvest soon.";
+                    document.getElementById('txt').innerHTML = <b>Day ${x}:</b> Weight = ${w}g | Derivative $f'(${x})$ = <b>${rate} g/day</b><br><br>${exp};
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>
