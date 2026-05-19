@@ -10,17 +10,15 @@
         h2 { color: #1e4620; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; margin-top: 0; }
         .model-box { background: #f9fbf9; border-left: 5px solid #2e7d32; padding: 15px; margin: 20px 0; border-radius: 4px; }
         .formula { font-size: 1.2rem; font-weight: bold; font-family: monospace; color: #2c3e50; margin: 10px 0; }
+        .chart-box { margin-top: 30px; background: #ffffff; border: 2px solid #2e7d32; padding: 20px; border-radius: 8px; }
+        .graph-area { display: flex; align-items: flex-end; justify-content: space-between; height: 220px; border-left: 3px solid #333; border-bottom: 3px solid #333; padding: 10px; background: #fafafa; }
         
-        /* KOTAK GRAF DIBAIKI */
-        .chart-box { margin-top: 30px; background: #ffffff; border: 2px solid #2e7d32; padding: 30px 20px; border-radius: 8px; }
-        .graph-area { display: flex; align-items: flex-end; justify-content: space-between; height: 250px; border-left: 3px solid #333; border-bottom: 3px solid #333; padding: 10px; background: #fafafa; }
-        
-        /* TIANG GRAF DIUBAH BAGI TEBAL & JELAS */
-        .bar { width: 14px; min-height: 10px; background: #2e7d32; border: 1px solid #1b5e20; transition: background 0.2s; cursor: pointer; border-radius: 3px 3px 0 0; }
+        /* TIANG GRAF HIJAU DISET BESAR & WAJIB KELUAR */
+        .bar { width: 25px; background: #2e7d32; border: 1px solid #1b5e20; cursor: pointer; border-radius: 3px 3px 0 0; text-align: center; }
         .bar:hover { background: #81c784; }
         
-        .x-ticks { display: flex; justify-content: space-between; color: #666; font-size: 0.9rem; font-weight: bold; margin-top: 10px; padding-left: 10px; }
-        .result-box { margin-top: 25px; background: #e8f5e9; border: 2px solid #c8e6c9; padding: 20px; border-radius: 8px; font-weight: bold; text-align: center; color: #2e7d32; font-size: 1.2rem; min-height: 50px; }
+        .x-ticks { display: flex; justify-content: space-between; color: #666; font-size: 0.9rem; font-weight: bold; margin-top: 10px; }
+        .result-box { margin-top: 25px; background: #e8f5e9; border: 2px solid #c8e6c9; padding: 15px; border-radius: 8px; font-weight: bold; text-align: center; color: #2e7d32; font-size: 1.1rem; min-height: 50px; }
     </style>
 </head>
 <body>
@@ -35,38 +33,42 @@
         </div>
 
         <p>📊 <strong>Interactive Growth Curve (Days 0 to 42)</strong></p>
-        <p style="color: #666; font-size: 0.9rem;">💡 <em>Halakan tetikus (mouse) pada tiang hijau untuk mengira kadar tumbesaran!</em></p>
+        <p style="color: #666; font-size: 0.9rem;">💡 <em>Halakan tetikus (mouse) atau klik pada tiang hijau untuk melihat pengiraan!</em></p>
         
         <div class="chart-box">
             <div class="graph-area" id="graphArea"></div>
-            <div class="x-ticks"><span>Day 0</span><span>Day 20</span><span>Day 42</span></div>
+            <div class="x-ticks"><span>Day 0</span><span>Day 21</span><span>Day 42</span></div>
         </div>
 
-        <div id="result" class="result-box">💡 Gerakkan mouse ke atas graf untuk mula mengira!</div>
+        <div id="result" class="result-box">💡 Halakan tetikus atau klik pada graf untuk mula mengira!</div>
     </div>
 
     <script>
         const graphArea = document.getElementById('graphArea');
         const resultDiv = document.getElementById('result');
         
-        // Buat 42 tiang, selang beberapa hari supaya muat skrin laptop
-        for(let x = 0; x <= 42; x += 1.5) {
-            let day = Math.round(x);
-            let weight = (-0.04 * Math.pow(day, 3)) + (2.8 * Math.pow(day, 2)) + (5 * day) + 45;
-            let rate = (-0.12 * Math.pow(day, 2)) + (5.6 * day) + 5;
+        // Memaparkan 8 tiang data utama supaya nampak besar dan tebal
+        const days = [0, 6, 12, 18, 24, 30, 36, 42];
+        
+        days.forEach(x => {
+            let weight = (-0.04 * Math.pow(x, 3)) + (2.8 * Math.pow(x, 2)) + (5 * x) + 45;
+            let rate = (-0.12 * Math.pow(x, 2)) + (5.6 * x) + 5;
             
             const bar = document.createElement('div');
             bar.className = 'bar';
             
-            // Kira tinggi tiang supaya wajib nampak
-            let heightPercent = (weight / 3500) * 100;
-            bar.style.height = Math.max(8, heightPercent) + '%';
+            let h = (weight / 3500) * 100;
+            bar.style.height = Math.max(20, h) + '%';
             
-            bar.onmouseover = () => {
-                resultDiv.innerHTML = 📍 DAY ${day} | Weight: ${weight.toFixed(1)}g <br> Growth Rate, f'(${day}) = ${rate.toFixed(2)} g/day;
+            const paparkanData = () => {
+                resultDiv.innerHTML = 📍 DAY ${x} | Weight: ${weight.toFixed(1)}g <br> Growth Rate, f'(${x}) = ${rate.toFixed(2)} g/day;
             };
+            
+            bar.onmouseover = paparkanData;
+            bar.onclick = paparkanData;
+            
             graphArea.appendChild(bar);
-        }
+        });
     </script>
 </body>
 </html>
